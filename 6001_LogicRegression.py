@@ -9,21 +9,12 @@ import torch
 from transformers import GPT2Tokenizer, GPT2Model
 import os
 
-# Download latest version
 path = kagglehub.dataset_download("suchintikasarkar/sentiment-analysis-for-mental-health")
 
 print("Path to dataset files:", path)
 
-# Assuming the path printed from the kagglehub download is correct
-# We need to find the specific CSV file within that downloaded directory.
-# Based on the dataset name, the main data file is likely named 'mental_health_sentiment.csv'
-# If the path structure is complex, you may need to adjust the file name/path.
-
-# Replace 'path' with the actual path variable from your kagglehub download output
-dataset_path = path  # Example path, replace with actual output
-
 file_name = "Combined Data.csv"
-file_path = os.path.join(dataset_path, file_name)
+file_path = os.path.join(path, file_name)
 
 print(f"Attempting to load data from: {file_path}")
 
@@ -41,10 +32,8 @@ try:
     print(df.shape)
 
     print("\n--- 4. Target Variable Distribution (Sentiment/Label) ---")
-    # Assuming the target column is named 'label' or 'sentiment'
-    # We will try 'label' based on similar datasets, you might need to adjust this.
     try:
-        target_column = 'label'  # Adjust if the actual column name is different
+        target_column = 'label'
         print(df[target_column].value_counts())
         print(f"\nTarget Variable Unique Values: {df[target_column].nunique()}")
     except KeyError:
@@ -52,7 +41,7 @@ try:
         # Fallback: check all unique values in all object columns
         print("\nObject (Text) Column Unique Values Check:")
         for col in df.select_dtypes(include=['object']).columns:
-            if df[col].nunique() < 20:  # Likely a category column
+            if df[col].nunique() < 20:
                 print(f"Column '{col}' value counts:\n{df[col].value_counts()}\n")
 
     print("\n--- 5. Check for Missing Values ---")
@@ -62,12 +51,9 @@ except FileNotFoundError:
 except Exception as e:
     print(f"\nAn error occurred during data loading: {e}")
 
-# --- 1. Load Data (assuming you have the 'df' DataFrame from your output) ---
+# --- 1. Load Data ---
 
-# Re-creating the DataFrame structure based on your output for demonstration
-# In your actual environment, you'll use the existing 'df'
-dataset_path = path
-file_path = os.path.join(dataset_path, "Combined Data.csv")
+file_path = os.path.join(path, "Combined Data.csv")
 df = pd.read_csv(file_path)
 
 # Drop the irrelevant index column
